@@ -62,10 +62,11 @@ runs:
 
     - name: Install Dashcam GUI (macOS)
       if: ${{ runner.os == 'macOS' }}
-      shell: pwsh
+      shell: bash
       run: |
-        Write-Host "Installing Dashcam GUI on ${{ runner.os }}"
-        Write-Host "Not supported yet, but Harrison is working on it!"
+        echo "Installing Dashcam GUI on ${{ runner.os }}"
+        echo "Not supported yet, but Harrison is working on it!"
+        exit 1
 
     - name: Install Node.js for Dashcam CLI (macOS)
       if: ${{ runner.os == 'macOS' }}
