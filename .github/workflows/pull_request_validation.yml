@@ -45,7 +45,7 @@ jobs:
       - name: Install Dashcam - MacOS
         uses: ./.
         with:
-          version: ""
+          version: "1.0"
           cli-version: ""
           node-version: ""
           node-directory: ""
