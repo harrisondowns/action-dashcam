@@ -65,7 +65,7 @@ runs:
       shell: bash
       run: |
         echo "Installing Dashcam GUI on ${{ runner.os }}"
-        echo "Not supported yet"
+        echo "Not supported yet, but Harrison is working on it!"
         exit 1
 
     - name: Install Node.js for Dashcam CLI (macOS)
