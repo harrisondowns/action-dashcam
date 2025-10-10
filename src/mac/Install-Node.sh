@@ -122,8 +122,7 @@ else
 fi
 
 # Ensure bin is in PATH for the remainder of this script
-# export PATH="$DIRECTORY/bin:$PATH"
-echo "$DIRECTORY/bin" >> $GITHUB_PATH
+export PATH="$DIRECTORY/bin:$PATH"
 
 NPM_BIN="$DIRECTORY/bin/npm"
 if [ ! -x "$NPM_BIN" ]; then
