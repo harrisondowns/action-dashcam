@@ -16,7 +16,8 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Start Recording
+    - name: Start Recording (Windows)
+      if: ${{ runner.os == 'Windows' }}
       shell: pwsh
       env:
         API_KEY: ${{ inputs.api-key }}
@@ -33,6 +34,22 @@ runs:
         Get-ChildItem -Path $env:GITHUB_ACTION_PATH\src\windows
         Get-Command Dashcam-Start.ps1
         Dashcam-Start.ps1 -ApiKey $env:API_KEY -LogFilePaths $env:LOG_FILE_PATHS -Timeout $env:CONNECTION_TIMEOUT
+
+    - name: Start Recording (macOS)
+      if: ${{ runner.os == 'macOS' }}
+      shell: bash
+      env:
+        API_KEY: ${{ inputs.api-key }}
+        LOG_FILE_PATHS: ${{ inputs.log-file-paths }}
+        CONNECTION_TIMEOUT: ${{ inputs.connection-timeout }}
+      run: |
+        echo "Starting recording with Dashcam API key: $API_KEY"
+        echo "Log file paths: $LOG_FILE_PATHS"
+        echo "Dashcam connection timeout: $CONNECTION_TIMEOUT"
+        echo "GITHUB_ACTION_PATH: $GITHUB_ACTION_PATH"
+        echo "PWD: $PWD"
+        ls -la "$GITHUB_ACTION_PATH/src/mac" || true
+        bash "$GITHUB_ACTION_PATH/src/mac/Dashcam-Start.sh" --api-key "$API_KEY" --log-file-paths "$LOG_FILE_PATHS" --timeout "$CONNECTION_TIMEOUT"
 
 branding:
   icon: "video"
