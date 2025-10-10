@@ -76,7 +76,8 @@ echo "::group::Starting Dashcam recording."
 
 # If an install step exported DASHCAM_NODE_DIR, include it and an npm-installs dir
 if [ -n "${DASHCAM_NODE_DIR:-}" ]; then
-  export PATH="$DASHCAM_NODE_DIR:$DASHCAM_NODE_DIR/npm-installs:$PATH"
+  echo "$DASHCAM_NODE_DIR:$DASHCAM_NODE_DIR/npm-installs" >> $GITHUB_PATH
+  # export PATH="$DASHCAM_NODE_DIR:$DASHCAM_NODE_DIR/npm-installs:$PATH"
   echo "Added DASHCAM_NODE_DIR to PATH: $DASHCAM_NODE_DIR"
 fi
 
@@ -85,6 +86,12 @@ if ! command -v dashcam >/dev/null 2>&1; then
   echo "dashcam CLI not found in PATH. Make sure the Dashcam CLI is installed and its bin directory is on PATH." >&2
   exit 1
 fi
+
+SAFE_API_PREFIX="${API_KEY:0:5}"
+
+# Compute and print SHA256 of the prefix (safe, non-secret fingerprint)
+PREFIX_SHA256="$(printf '%s' "$SAFE_API_PREFIX" | shasum -a 256 | awk '{print $1}')"
+echo "API key prefix SHA256: ${PREFIX_SHA256}"
 
 echo "Authenticating dashcam CLI..."
 AUTH_OUTPUT="$(dashcam auth "$API_KEY" 2>&1 || true)"
