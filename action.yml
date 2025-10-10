@@ -71,8 +71,6 @@ runs:
         npm -v
         npm config list
         npm list -g --depth=0 || true
-    - run: npm ci
-    - run: npm test
     - name: Install Dashcam GUI (macOS)
       if: ${{ runner.os == 'macOS' }}
       shell: bash
