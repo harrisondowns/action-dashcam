@@ -67,9 +67,13 @@ runs:
     - name: Verify Node.js installation
       shell: bash
       run: |
+        echo "Verifying Node.js installation on ${{ runner.os }}"
         node -v
+        echo "Checking npm version"
         npm -v
+        echo "Listing npm global packages"
         npm config list
+        echo "Listing npm global packages with depth 0"
         npm list -g --depth=0 || true
     - name: Install Dashcam GUI (macOS)
       if: ${{ runner.os == 'macOS' }}
