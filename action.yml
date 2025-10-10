@@ -75,20 +75,19 @@ runs:
     #     npm config list
     #     echo "Listing npm global packages with depth 0"
     #     npm list -g --depth=0 || true
-    # - name: Install Dashcam GUI (macOS)
-    #   if: ${{ runner.os == 'macOS' }}
-    #   shell: bash
-    #   run: |
-    #     echo "Installing Dashcam GUI on ${{ runner.os }}"
-    #     echo "Not supported yet, but Harrison is working on it!"
-    #     exit 1
+    - name: Install Dashcam GUI (macOS)
+      if: ${{ runner.os == 'macOS' }}
+      shell: bash
+      run: |
+        echo "Installing Dashcam GUI on ${{ runner.os }}"
+        bash "$GITHUB_ACTION_PATH/src/mac/Install-DashcamGUI.sh" --version "${{ inputs.version }}"
+        echo "Dashcam GUI installed"
 
     - name: Install Node.js for Dashcam CLI (macOS)
       if: ${{ runner.os == 'macOS' }}
       shell: bash
       run: |
         echo "Installing Node.js for Dashcam CLI on ${{ runner.os }}"
-        # Use GITHUB_ACTION_PATH so the runner finds the script inside the action
         bash "$GITHUB_ACTION_PATH/src/mac/Install-Node.sh" --version "${{ inputs.node-version }}" --directory "${{ inputs.node-directory }}" --prefix "${{ inputs.node-prefix }}"
         echo "Node.js installed to ${{ inputs.node-directory }}"
 
