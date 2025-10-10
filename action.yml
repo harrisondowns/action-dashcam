@@ -88,7 +88,8 @@ runs:
       shell: bash
       run: |
         echo "Installing Node.js for Dashcam CLI on ${{ runner.os }}"
-        ./src/mac/Install-Node.sh --version ${{ inputs.node-version }} --directory ${{ inputs.node-directory }} --prefix ${{ inputs.node-prefix }}
+        # Use GITHUB_ACTION_PATH so the runner finds the script inside the action
+        bash "$GITHUB_ACTION_PATH/src/mac/Install-Node.sh" --version "${{ inputs.node-version }}" --directory "${{ inputs.node-directory }}" --prefix "${{ inputs.node-prefix }}"
         echo "Node.js installed to ${{ inputs.node-directory }}"
 
     - name: Install Dashcam CLI (macOS)
