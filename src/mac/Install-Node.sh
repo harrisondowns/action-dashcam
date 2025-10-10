@@ -122,7 +122,8 @@ else
 fi
 
 # Ensure bin is in PATH for the remainder of this script
-export PATH="$DIRECTORY/bin:$PATH"
+# export PATH="$DIRECTORY/bin:$PATH"
+echo "$DIRECTORY/bin" >> $GITHUB_PATH
 
 NPM_BIN="$DIRECTORY/bin/npm"
 if [ ! -x "$NPM_BIN" ]; then
@@ -149,8 +150,8 @@ else
 	"$NPM_BIN" config list -g || true
 fi
 
-echo "${DIRECTORY}/bin" >> "$GITHUB_PATH"
-echo "${PREFIX}/bin" >> "$GITHUB_PATH"
+echo "${DIRECTORY}/bin" >> $GITHUB_PATH
+echo "${PREFIX}/bin" >> $GITHUB_PATH
 
 echo "Installation complete."
 echo "Add $DIRECTORY/bin to your PATH to use this node install (for example: export PATH=$DIRECTORY/bin:\$PATH)"
