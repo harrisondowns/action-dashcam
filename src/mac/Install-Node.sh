@@ -149,9 +149,8 @@ else
 	"$NPM_BIN" config list -g || true
 fi
 
-export PATH="${PREFIX}/bin:$PATH"
-
-echo "Path is now: $PATH"
+echo "${DIRECTORY}/bin" >> "$GITHUB_PATH"
+echo "${PREFIX}/bin" >> "$GITHUB_PATH"
 
 echo "Installation complete."
 echo "Add $DIRECTORY/bin to your PATH to use this node install (for example: export PATH=$DIRECTORY/bin:\$PATH)"
