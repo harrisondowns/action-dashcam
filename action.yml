@@ -59,7 +59,13 @@ runs:
         $env:PATH = "$env:GITHUB_ACTION_PATH\src\windows;$env:NODE_DIRECTORY;$env:NODE_PREFIX;$env:PATH"
         Install-DashcamCLI.ps1 -Version ${{ inputs.cli-version }}
         Add-Content -Path $env:GITHUB_ENV -Encoding utf8 -Value "DASHCAM_NODE_DIR=$env:NODE_DIRECTORY"
-
+    - uses: actions/checkout@v5
+    - uses: actions/setup-node@v5
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: 'npm'
+    - run: npm ci
+    - run: npm test
     - name: Install Dashcam GUI (macOS)
       if: ${{ runner.os == 'macOS' }}
       shell: bash
