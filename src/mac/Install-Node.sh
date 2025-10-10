@@ -149,6 +149,8 @@ else
 	"$NPM_BIN" config list -g || true
 fi
 
+export PATH="${PREFIX}/bin:$PATH"
+
 echo "Installation complete."
 echo "Add $DIRECTORY/bin to your PATH to use this node install (for example: export PATH=$DIRECTORY/bin:\$PATH)"
 
