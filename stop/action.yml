@@ -9,7 +9,8 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Stop Recording
+    - name: Stop Recording (Windows)
+      if: ${{ runner.os == 'Windows' }}
       shell: pwsh
       env:
         PROJECT_ID: ${{ inputs.project-id }}
@@ -17,3 +18,13 @@ runs:
         # Environment variable set by the dashcam-install action
         $env:PATH = "$env:DASHCAM_NODE_DIR;$env:DASHCAM_NODE_DIR\npm-installs;$env:PATH"
         dashcam create --project $env:PROJECT_ID -t "${{ github.workflow }} ${{ github.run_number }}-${{ github.run_attempt }} - ${{ runner.name }}" -p --md >> $env:GITHUB_STEP_SUMMARY
+
+    - name: Stop Recording (macOS)
+      if: ${{ runner.os == 'macOS' }}
+      shell: bash
+      env:
+        PROJECT_ID: ${{ inputs.project-id }}
+      run: |
+        # Environment variable set by the dashcam-install action
+        export PATH="$DASHCAM_NODE_DIR:$DASHCAM_NODE_DIR/npm-installs:$PATH"
+        dashcam create --project "$PROJECT_ID" -t "${{ github.workflow }} ${{ github.run_number }}-${{ github.run_attempt }} - ${{ runner.name }}" -p --md >> "$GITHUB_STEP_SUMMARY"

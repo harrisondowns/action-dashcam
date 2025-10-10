@@ -47,64 +47,28 @@ echo "Installing Dashcam GUI version $VERSION for macOS"
 INSTALL_DIR="$(mktemp -d -t dashcam-gui.XXXXXX)"
 echo "Using temporary install directory: $INSTALL_DIR"
 
-# Possible asset suffixes to try (in order)
-SUFFIXES=(".dmg" ".zip" ".tar.gz")
-#               https://github.com/replayableio/replayable/releases/download/v1.0.49/Dashcam-1.0.49-arm64-mac.zip
+# Download the arm64 zip file
 ASSET_URL_BASE="https://github.com/replayableio/replayable/releases/download/v${VERSION}"
-DOWNLOADED=""
+FILENAME="Dashcam-${VERSION}-arm64-mac.zip"
+DEST="$INSTALL_DIR/$FILENAME"
 
-for suf in "${SUFFIXES[@]}"; do
-  FILENAME="Dashcam-${VERSION}-arm64-mac${suf}"
-  URL="$ASSET_URL_BASE/$FILENAME"
-  DEST="$INSTALL_DIR/$FILENAME"
-  echo "Trying $URL"
-  if curl -fSL -o "$DEST" "$URL" 2>/dev/null; then
-    DOWNLOADED="$DEST"
-    echo "Downloaded $FILENAME"
-    break
-  else
-    echo "Not found: $FILENAME"
-    rm -f "$DEST" || true
-  fi
-done
+echo "Trying $ASSET_URL_BASE/$FILENAME"
+if ! curl -fSL -o "$DEST" "$ASSET_URL_BASE/$FILENAME"; then
+  echo "Failed to download $FILENAME from $ASSET_URL_BASE" >&2
+  exit 2
+fi
+
+DOWNLOADED="$DEST"
 
 if [ -z "$DOWNLOADED" ]; then
   echo "Failed to find a Dashcam portable artifact for version $VERSION" >&2
   exit 2
 fi
 
-# Extract or mount and locate the .app
-APP_PATH=""
-case "$DOWNLOADED" in
-  *.dmg)
-    MOUNT_POINT="$INSTALL_DIR/mnt"
-    mkdir -p "$MOUNT_POINT"
-    echo "Mounting DMG..."
-    hdiutil attach -nobrowse -quiet -mountpoint "$MOUNT_POINT" "$DOWNLOADED"
-    # Find first .app under mount point
-    APP_PATH="$(find "$MOUNT_POINT" -maxdepth 2 -name "*.app" -print -quit || true)"
-    if [ -z "$APP_PATH" ]; then
-      echo "No .app found in mounted DMG" >&2
-      hdiutil detach "$MOUNT_POINT" || true
-      exit 3
-    fi
-    ;;
-  *.zip)
-    echo "Unzipping..."
-    unzip -q "$DOWNLOADED" -d "$INSTALL_DIR/extracted"
-    APP_PATH="$(find "$INSTALL_DIR/extracted" -maxdepth 3 -name "*.app" -print -quit || true)"
-    ;;
-  *.tar.gz)
-    echo "Extracting tarball..."
-    mkdir -p "$INSTALL_DIR/extracted"
-    tar -xzf "$DOWNLOADED" -C "$INSTALL_DIR/extracted"
-    APP_PATH="$(find "$INSTALL_DIR/extracted" -maxdepth 3 -name "*.app" -print -quit || true)"
-    ;;
-  *)
-    echo "Unknown downloaded file type: $DOWNLOADED" >&2
-    exit 4
-    ;;
-esac
+# Zip extraction
+echo "Unzipping..."
+unzip -q "$DOWNLOADED" -d "$INSTALL_DIR/extracted"
+APP_PATH="$(find "$INSTALL_DIR/extracted" -maxdepth 3 -name "*.app" -print -quit || true)"
 
 if [ -z "$APP_PATH" ]; then
   echo "Could not locate Dashcam .app after extraction." >&2
@@ -129,15 +93,6 @@ if [ -w "/Applications" ]; then
   cp -R "$APP_PATH" "/Applications/"
 else
   sudo cp -R "$APP_PATH" "/Applications/"
-fi
-
-# If we mounted a DMG, detach it
-if [[ "$DOWNLOADED" == *.dmg ]]; then
-  echo "Detaching DMG mount..."
-  # detach the mountpoint created earlier
-  if mount | grep -q "$MOUNT_POINT" 2>/dev/null; then
-    hdiutil detach "$MOUNT_POINT" -quiet || true
-  fi
 fi
 
 # Create user_data directory and files similar to the Windows installer
