@@ -88,6 +88,8 @@ fi
 
 echo "Authenticating dashcam CLI..."
 AUTH_OUTPUT="$(dashcam auth "$API_KEY" 2>&1 || true)"
+echo "outputting..."
+echo "outputting AUTH OUTPUT for debugging: $AUTH_OUTPUT"
 echo "$AUTH_OUTPUT"
 
 if [[ "$AUTH_OUTPUT" == *"Connected as"* ]]; then
