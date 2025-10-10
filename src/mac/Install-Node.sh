@@ -151,6 +151,8 @@ fi
 
 export PATH="${PREFIX}/bin:$PATH"
 
+echo "Path is now: $PATH"
+
 echo "Installation complete."
 echo "Add $DIRECTORY/bin to your PATH to use this node install (for example: export PATH=$DIRECTORY/bin:\$PATH)"
 

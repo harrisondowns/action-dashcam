@@ -42,6 +42,8 @@ fi
 
 echo "Installing Dashcam CLI $VERSION..."
 
+echo "Path is currently: $PATH"
+
 # Verify npm is available
 if ! command -v npm >/dev/null 2>&1; then
   echo "npm not found in PATH. Make sure Node.js/npm is installed and on PATH." >&2
