@@ -64,6 +64,13 @@ runs:
       with:
         node-version: ${{ inputs.node-version }}
         cache: 'npm'
+    - name: Verify Node.js installation
+      shell: bash
+      run: |
+        node -v
+        npm -v
+        npm config list
+        npm list -g --depth=0 || true
     - run: npm ci
     - run: npm test
     - name: Install Dashcam GUI (macOS)
