@@ -59,22 +59,22 @@ runs:
         $env:PATH = "$env:GITHUB_ACTION_PATH\src\windows;$env:NODE_DIRECTORY;$env:NODE_PREFIX;$env:PATH"
         Install-DashcamCLI.ps1 -Version ${{ inputs.cli-version }}
         Add-Content -Path $env:GITHUB_ENV -Encoding utf8 -Value "DASHCAM_NODE_DIR=$env:NODE_DIRECTORY"
-    - uses: actions/checkout@v5
-    - uses: actions/setup-node@v5
-      with:
-        node-version: ${{ inputs.node-version }}
-        cache: 'npm'
-    - name: Verify Node.js installation
-      shell: bash
-      run: |
-        echo "Verifying Node.js installation on ${{ runner.os }}"
-        node -v
-        echo "Checking npm version"
-        npm -v
-        echo "Listing npm global packages"
-        npm config list
-        echo "Listing npm global packages with depth 0"
-        npm list -g --depth=0 || true
+    # - uses: actions/checkout@v5
+    # - uses: actions/setup-node@v5
+    #   with:
+    #     node-version: ${{ inputs.node-version }}
+    #     cache: 'npm'
+    # - name: Verify Node.js installation
+    #   shell: bash
+    #   run: |
+    #     echo "Verifying Node.js installation on ${{ runner.os }}"
+    #     node -v
+    #     echo "Checking npm version"
+    #     npm -v
+    #     echo "Listing npm global packages"
+    #     npm config list
+    #     echo "Listing npm global packages with depth 0"
+    #     npm list -g --depth=0 || true
     - name: Install Dashcam GUI (macOS)
       if: ${{ runner.os == 'macOS' }}
       shell: bash
@@ -88,8 +88,8 @@ runs:
       shell: bash
       run: |
         echo "Installing Node.js for Dashcam CLI on ${{ runner.os }}"
-        echo "Not supported yet"
-        exit 1
+        ./src/mac/Install-Node.sh --version ${{ inputs.node-version }} --directory ${{ inputs.node-directory }} --prefix ${{ inputs.node-prefix }}
+        echo "Node.js installed to ${{ inputs.node-directory }}"
 
     - name: Install Dashcam CLI (macOS)
       if: ${{ runner.os == 'macOS' }}
